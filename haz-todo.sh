@@ -1,5 +1,8 @@
 #!/bin/bash
 
+BRANCH=master
+[ -n "${1}" ] && BRANCH="${1}"
+
 REPO=$(which repo)
 if [ -z "${REPO}" ]; then
 	if [ ! -s ./repo ]; then
@@ -9,7 +12,7 @@ if [ -z "${REPO}" ]; then
 	REPO=./repo
 fi
 
-${REPO} init -u git://gitorious.org/cjsjb-partituras/manifiesto.git
+${REPO} init -u git://gitorious.org/cjsjb-partituras/manifiesto.git -b ${BRANCH}
 ${REPO} sync
 
 # Generar el contenido:
@@ -25,3 +28,5 @@ yes quit | gs -sDEVICE=pdfwrite -sOutputFile=cjsjb-partituras.pdf \
       extras/indice.pdf \
       extras/hoja-blanca.pdf \
       contenido.pdf
+
+echo
