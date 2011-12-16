@@ -1,0 +1,27 @@
+Ver "Installing Repo" en http://source.android.com/source/downloading.html
+para instalar repo. En esencia:
+  curl https://dl-ssl.google.com/dl/googlesource/git-repo/repo > ~/bin/repo
+  chmod a+x ~/bin/repo
+
+Luego:
+  mkdir cjsjb-partituras
+  cd cjsjb-partituras
+  repo init -u git://gitorious.org/cjsjb-partituras/manifiesto.git
+  repo sync
+
+  # Generar el contenido:
+  ./haz-contenido.sh
+  # Generar la portada:
+  ./haz-portada.sh
+  # Generar el índice:
+  ./haz-indice.sh
+
+Aquí hay que editar el índice [extras/indice.fodt] para que muestre los
+títulos correctos.
+
+  yes quit | gs -sDEVICE=pdfwrite -sOutputFile=cjsjb-partituras.pdf \
+      extras/portada.pdf \
+      extras/hoja-blanca.pdf \
+      extras/indice.pdf \
+      extras/hoja-blanca.pdf \
+      contenido.pdf
