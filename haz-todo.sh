@@ -9,7 +9,7 @@ if [ -z "${REPO}" ]; then
 		curl -k https://dl-ssl.google.com/dl/googlesource/git-repo/repo -O ./repo
 		chmod a+x ./repo
 	fi
-	REPO=./repo
+	REPO=$(readlink -f ./repo)
 fi
 
 ${REPO} init -u git://gitorious.org/cjsjb-partituras/manifiesto.git -b ${BRANCH}
