@@ -50,7 +50,7 @@ for i in ${LIBRO}; do
 	localfile=$(basename $arch)
 	filetype=${localfile#*\.}
 
-	if [ "${filetype}" = "ly" ]; then
+	if [ "${filetype}" = "ly" -a -e "partituras/${arch}" ]; then
 		if [ -d "partituras/${localdir}/.git" ]; then
 			pushd "partituras/${localdir}/" >/dev/null
 			git checkout m/master
@@ -92,7 +92,7 @@ for i in ${LIBRO}; do
 		THREAD="${THREAD} partituras/${localdir}/${localfile%%.ly}.pdf"
 
 		popd >/dev/null
-	elif [ "${filetype}" = "pdf" ]; then
+	elif [ "${filetype}" = "pdf" -a -e "${arch}" ]; then
 		currentpagemod=$( echo "${CUENTA} % 2" | bc)
 		currentpagealignment=${pagealignment[${currentpagemod}]}
 		[ -n "${pagealignwant}" ] && if [ ! "${currentpagealignment}" = "${pagealignwant}" ]; then
@@ -106,6 +106,7 @@ for i in ${LIBRO}; do
 		THREAD="${THREAD} ${localdir}/${localfile}"
 	fi
 
+	[ -z "${pdfpages}" ] && pdfpages=0
 	CUENTA=$(( $CUENTA + ${pdfpages} ))
 
 done
