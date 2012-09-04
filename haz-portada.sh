@@ -1,9 +1,16 @@
 #!/bin/bash
 
+# libro.inc should define:
+#  EDICION, such as "libro-201209"
+#  CONTENIDO, such as "file1.ly l:file2.ly file3.pdf r:file4.ly"
+source libro.inc
+
+if [ -z "${EDICION}" ]; then
+	DAY=$(date +"%Y%m%d")
+	EDICION="libro-${DAY}"
+fi
 PORTADA=extras/portada.fodt
 PORTOUT=${PORTADA}.body
-
-source libro.inc
 
 cat ${PORTADA}.head > ${PORTADA}
 

@@ -15,6 +15,8 @@ fi
 ${REPO} init -u git://gitorious.org/cjsjb-partituras/manifiesto.git -b ${BRANCH}
 ${REPO} sync
 
+# Definir contenido del libro:
+php manifest2libro.php .repo/manifest.xml > libro.inc
 # Generar el contenido:
 ./haz-contenido.sh
 # Generar la portada:

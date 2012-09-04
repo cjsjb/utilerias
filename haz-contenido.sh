@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# libro.inc should define:
+#  EDICION, such as "libro-201209"
+#  CONTENIDO, such as "file1.ly l:file2.ly file3.pdf r:file4.ly"
 source libro.inc
 
 if [ ! -z "${EDICION}" ]; then
@@ -21,21 +24,9 @@ pagealignment[1]="r"
 #rm -rf partituras
 mkdir -p partituras
 
-LIBRO="\
-	${ENTRADA} \
-	${KIRIE} \
-	${GLORIA} \
-	${ALELUYA} \
-	${OFERTORIO} \
-	${SANTO} \
-	${CORDERO} \
-	${COMUNION} \
-	${SALIDA} \
-	"
-
 [ -e ${INDEX} ] && rm ${INDEX}
 CUENTA=1
-for i in ${LIBRO}; do
+for i in ${CONTENIDO}; do
 	arch="${i}"
 	pagealignwant=
 
