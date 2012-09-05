@@ -3,7 +3,7 @@
 BRANCH=master
 [ -n "${1}" ] && BRANCH="${1}"
 
-REPO=$(which repo)
+REPO=$(which repo || :)
 if [ -z "${REPO}" ]; then
 	if [ ! -s ./repo ]; then
 		curl -k https://dl-ssl.google.com/dl/googlesource/git-repo/repo -O ./repo
