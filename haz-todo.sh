@@ -2,6 +2,10 @@
 
 BASEDIR=$(dirname $0)
 
+DOSYNC=1
+
+[ "$1" = "--no-sync" ] && DOSYNC=0
+
 BRANCH=master
 [ -n "${1}" ] && BRANCH="${1}"
 
@@ -14,8 +18,10 @@ if [ -z "${REPO}" ]; then
 	REPO=$(readlink -f "${BASEDIR}/repo")
 fi
 
-${REPO} init -u git://gitorious.org/cjsjb-partituras/manifiesto.git -b ${BRANCH}
-${REPO} sync
+if [ ${DOSYNC} -eq 1 ]; then
+	${REPO} init -u git://gitorious.org/cjsjb-partituras/manifiesto.git -b ${BRANCH}
+	${REPO} sync
+fi
 
 # Definir contenido del libro:
 php "${BASEDIR}/manifest2libro.php" .repo/manifest.xml > libro.inc
