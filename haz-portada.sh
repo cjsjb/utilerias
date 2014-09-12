@@ -5,11 +5,13 @@
 #  CONTENIDO, such as "file1.ly l:file2.ly file3.pdf r:file4.ly"
 source libro.inc
 
+BASEDIR=$(dirname $0)
+
 if [ -z "${EDICION}" ]; then
 	DAY=$(date +"%Y%m%d")
 	EDICION="libro-${DAY}"
 fi
-PORTADA=extras/portada.fodt
+PORTADA="${BASEDIR}/extras/portada.fodt"
 PORTOUT=${PORTADA}.body
 
 cat ${PORTADA}.head > ${PORTADA}
