@@ -1,34 +1,36 @@
 #!/bin/bash
 
+BASEDIR=$(dirname $0)
+
 BRANCH=master
 [ -n "${1}" ] && BRANCH="${1}"
 
 REPO=$(which repo || :)
 if [ -z "${REPO}" ]; then
-	if [ ! -s ./repo ]; then
-		curl -k https://storage.googleapis.com/git-repo-downloads/repo -O ./repo
-		chmod a+x ./repo
+	if [ ! -s "${BASEDIR}/repo" ]; then
+		curl -k https://storage.googleapis.com/git-repo-downloads/repo -O "${BASEDIR}/repo"
+		chmod a+x "${BASEDIR}/repo"
 	fi
-	REPO=$(readlink -f ./repo)
+	REPO=$(readlink -f "${BASEDIR}/repo")
 fi
 
 ${REPO} init -u git://gitorious.org/cjsjb-partituras/manifiesto.git -b ${BRANCH}
 ${REPO} sync
 
 # Definir contenido del libro:
-php manifest2libro.php .repo/manifest.xml > libro.inc
+php "${BASEDIR}/manifest2libro.php" .repo/manifest.xml > libro.inc
 # Generar el contenido:
-./haz-contenido.sh
+"${BASEDIR}/haz-contenido.sh"
 # Generar la portada:
-./haz-portada.sh
+"${BASEDIR}/haz-portada.sh"
 # Generar el índice:
-./haz-indice.sh
+"${BASEDIR}/haz-indice.sh"
 
 yes quit | gs -sDEVICE=pdfwrite -sOutputFile=cjsjb-partituras.pdf \
-      extras/portada.pdf \
-      extras/hoja-blanca.pdf \
-      extras/indice.pdf \
-      extras/hoja-blanca.pdf \
+      "${BASEDIR}/extras/portada.pdf" \
+      "${BASEDIR}/extras/hoja-blanca.pdf" \
+      "${BASEDIR}/extras/indice.pdf" \
+      "${BASEDIR}/extras/hoja-blanca.pdf" \
       contenido.pdf
 
 echo
