@@ -6,7 +6,7 @@ BRANCH=master
 REPO=$(which repo || :)
 if [ -z "${REPO}" ]; then
 	if [ ! -s ./repo ]; then
-		curl -k https://dl-ssl.google.com/dl/googlesource/git-repo/repo -O ./repo
+		curl -k https://storage.googleapis.com/git-repo-downloads/repo -O ./repo
 		chmod a+x ./repo
 	fi
 	REPO=$(readlink -f ./repo)
