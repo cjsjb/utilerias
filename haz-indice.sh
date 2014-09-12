@@ -1,6 +1,8 @@
 #!/bin/bash
 
-INDICE=extras/indice.fodt
+BASEDIR=$(dirname $0)
+
+INDICE="${BASEDIR}/extras/indice.fodt"
 INDOUT=${INDICE}.body
 
 cat << EOF > ${INDOUT}
