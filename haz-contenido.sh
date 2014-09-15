@@ -14,6 +14,7 @@ fi
 WORKOUTPUT="contenido.pdf"
 WORKDIR=$(pwd)
 INDEX=${WORKDIR}/indice.txt
+BASEDIR=$(dirname $0)
 
 THREAD=""
 declare -a pagealignment
@@ -63,7 +64,7 @@ for i in ${CONTENIDO}; do
 		currentpagemod=$( echo "${CUENTA} % 2" | bc)
 		currentpagealignment=${pagealignment[${currentpagemod}]}
 		[ -n "${pagealignwant}" ] && if [ ! "${currentpagealignment}" = "${pagealignwant}" ]; then
-			THREAD="${THREAD} extras/hoja-blanca.pdf"
+			THREAD="${THREAD} ${BASEDIR}/extras/hoja-blanca.pdf"
 			CUENTA=$(( $CUENTA + 1 ))
 		fi
 
@@ -77,24 +78,24 @@ for i in ${CONTENIDO}; do
 		git diff --exit-code ${localfile} ||
 			git commit "${localfile}" -m "Paginación de libro para ${WORKBRANCH}."
 		lilypond ${localfile}
-		rm ${localfile%%.ly}.ps
+		rm -f ${localfile%%.ly}.ps
 		pdfpages=$(strings ${localfile%%.ly}.pdf | egrep -o '/Count\ [0-9]*$' | sed -e 's#\/Count\ ##g')
 		echo "Pages=[${pdfpages}]"
 		THREAD="${THREAD} partituras/${localdir}/${localfile%%.ly}.pdf"
 
 		popd >/dev/null
-	elif [ "${filetype}" = "pdf" -a -e "${arch}" ]; then
+	elif [ "${filetype}" = "pdf" -a -e "${BASEDIR}/${arch}" ]; then
 		currentpagemod=$( echo "${CUENTA} % 2" | bc)
 		currentpagealignment=${pagealignment[${currentpagemod}]}
 		[ -n "${pagealignwant}" ] && if [ ! "${currentpagealignment}" = "${pagealignwant}" ]; then
-			THREAD="${THREAD} extras/hoja-blanca.pdf"
+			THREAD="${THREAD} ${BASEDIR}/extras/hoja-blanca.pdf"
 			CUENTA=$(( $CUENTA + 1 ))
 		fi
 
 		echo ${CUENTA},${localfile} >> ${INDEX}
-		pdfpages=$(strings ${localdir}/${localfile} | egrep -o '/Count\ [0-9]*$' | sed -e 's#\/Count\ ##g')
+		pdfpages=$(strings ${BASEDIR}/${localdir}/${localfile} | egrep -o '/Count\ [0-9]*$' | sed -e 's#\/Count\ ##g')
 		echo "Pages=[${pdfpages}]"
-		THREAD="${THREAD} ${localdir}/${localfile}"
+		THREAD="${THREAD} ${BASEDIR}/${localdir}/${localfile}"
 	fi
 
 	[ -z "${pdfpages}" ] && pdfpages=0
