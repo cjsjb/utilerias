@@ -77,6 +77,9 @@ for i in ${CONTENIDO}; do
 
 		git diff --exit-code ${localfile} ||
 			git commit "${localfile}" -m "Paginación de libro para ${WORKBRANCH}."
+
+		[ -x ${WORKDIR}/postprocessor.sh ] && bash ${WORKDIR}/postprocessor.sh ${localfile}
+
 		lilypond ${localfile}
 		rm -f ${localfile%%.ly}.ps
 		pdfpages=$(strings ${localfile%%.ly}.pdf | egrep -o '/Count\ [0-9]*$' | sed -e 's#\/Count\ ##g')
