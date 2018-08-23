@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# libro.inc should define:
-#  EDICION, such as "libro-201209"
-#  CONTENIDO, such as "file1.ly l:file2.ly file3.pdf r:file4.ly"
-source libro.inc
+# libro.def should include one file per line, such as:
+#   file1.ly
+#   l:file2.ly
+#   file3.pdf
+#   r:file4.ly
 
 WORKOUTPUT="contenido.pdf"
 WORKDIR=$(pwd)
@@ -21,7 +22,8 @@ mkdir -p partituras
 
 [ -e ${INDEX} ] && rm ${INDEX}
 CUENTA=1
-for i in ${CONTENIDO}; do
+while read -r i; do
+	[ -z "$i" ] && continue
 	arch="${i}"
 	pagealignwant=
 
@@ -79,6 +81,6 @@ for i in ${CONTENIDO}; do
 	[ -z "${pdfpages}" ] && pdfpages=0
 	CUENTA=$(( $CUENTA + ${pdfpages} ))
 
-done
+done < libro.def
 
 yes quit | gs -sDEVICE=pdfwrite -sOutputFile=${WORKOUTPUT} ${THREAD}
