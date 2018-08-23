@@ -1,8 +1,8 @@
 #!/bin/bash
 
-BASEDIR=$(dirname $0)
+UTILDIR=$(readlink -f $(dirname $0))
 
-INDICE="${BASEDIR}/extras/indice.fodt"
+INDICE="indice.fodt"
 INDOUT=${INDICE}.body
 
 cat << EOF > ${INDOUT}
@@ -42,7 +42,8 @@ cat << EOF >> ${INDOUT}
    </office:body>
 EOF
 
-cat ${INDICE}.head ${INDICE}.body ${INDICE}.tail > ${INDICE}
+cat ${UTILDIR}/extras/${INDICE}.head ${INDOUT} ${UTILDIR}/extras/${INDICE}.tail > ${INDICE}
+rm ${INDOUT}
 
 UNOCONV=$(which unoconv)
 if [ ! -z "${UNOCONV}" ]; then
