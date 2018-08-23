@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 // de http://php.net/manual/en/function.strtr.php#98669
@@ -31,7 +32,10 @@ function cat2file($category)
     return $file;
 }
 
-$manifestfile = (isset($argv[1]) ? $argv[1] : "default.xml");
+$manifestfile = ".repo/manifest.xml";
+if (isset($argv[1]))
+    $manifestfile = $argv[1];
+
 $xml = simplexml_load_file($manifestfile);
 $json = json_encode($xml);
 $xmlarray = json_decode($json,TRUE);
@@ -61,7 +65,7 @@ foreach ($projects as $index => $project)
 {
     $currcat = $project['@attributes']['category'];
     $currtitle = $project['@attributes']['title'];
-    $currpath =$project['@attributes']['path'];
+    $currpath = $project['@attributes']['path'];
     $currpath = str_replace($localpath, "", $currpath); //quitar pathlocal
     if (array_key_exists('score', $project['@attributes']))
         $currscore = $project['@attributes']['score'];
@@ -76,7 +80,7 @@ $newlist = array();
 foreach ($bookcontent as $category => $files)
 {
     $filcat = cat2file($category);
-    $newlist[] = "r:extras/cjsjb-partituras-separador-$filcat.pdf";
+    $newlist[] = "r:utilerias/paginas/separador-$filcat.pdf:$category";
 
     foreach ($files as $file)
     {
@@ -84,10 +88,11 @@ foreach ($bookcontent as $category => $files)
     }
 }
 
-//echo $list ."\n";
-echo "CONTENIDO=\"";
 foreach ($newlist as $file)
-	echo "$file \n";
-echo "\"";
+{
+    if (substr($file, 0, 2) == "r:")
+        echo PHP_EOL;
+    echo "    $file " . PHP_EOL;
+}
 
 ?>
