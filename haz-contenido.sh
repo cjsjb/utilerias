@@ -5,12 +5,6 @@
 #  CONTENIDO, such as "file1.ly l:file2.ly file3.pdf r:file4.ly"
 source libro.inc
 
-if [ ! -z "${EDICION}" ]; then
-	WORKBRANCH=${EDICION}
-else
-	DAY=$(date +"%Y%m%d")
-	WORKBRANCH="libro-${DAY}"
-fi
 WORKOUTPUT="contenido.pdf"
 WORKDIR=$(pwd)
 INDEX=${WORKDIR}/indice.txt
@@ -43,23 +37,7 @@ for i in ${CONTENIDO}; do
 	filetype=${localfile#*\.}
 
 	if [ "${filetype}" = "ly" -a -e "partituras/${arch}" ]; then
-		if [ -d "partituras/${localdir}/.git" ]; then
-			pushd "partituras/${localdir}/" >/dev/null
-			git checkout m/master
-			popd >/dev/null
-		else
-			echo "Not controlled by GIT? Who are YOU??" && exit 1
-		fi
-
 		pushd "partituras/${localdir}" > /dev/null
-
-		haybranch=$(git branch | cut -c3- | grep "^${WORKBRANCH}$")
-		if [ -z "${haybranch}" ]; then
-			git checkout -b "${WORKBRANCH}" --track m/master
-		else
-			git checkout "${WORKBRANCH}"
-			git rebase m/master
-		fi
 
 		currentpagemod=$( echo "${CUENTA} % 2" | bc)
 		currentpagealignment=${pagealignment[${currentpagemod}]}
@@ -74,9 +52,6 @@ for i in ${CONTENIDO}; do
 		SUBTITLE=$(grep subtitle ${localfile} | grep -v subsubtitle | egrep -o \".*\"$ | tr -d \")
 		IENTRY="${TITLE}"; [ -n "${SUBTITLE}" ] && IENTRY="${IENTRY} ${SUBTITLE}"
 		echo ${CUENTA},${IENTRY} >> ${INDEX}
-
-		git diff --exit-code ${localfile} ||
-			git commit "${localfile}" -m "Paginación de libro para ${WORKBRANCH}."
 
 		[ -x ${WORKDIR}/postprocessor.sh ] && bash ${WORKDIR}/postprocessor.sh ${localfile}
 
