@@ -1,33 +1,28 @@
 #!/bin/bash
 
-# libro.inc should define:
-#  EDICION, such as "libro-201209"
-#  CONTENIDO, such as "file1.ly l:file2.ly file3.pdf r:file4.ly"
-source libro.inc
-
-BASEDIR=$(dirname $0)
+UTILDIR=$(readlink -f $(dirname $0))
 
 if [ -z "${EDICION}" ]; then
 	DAY=$(date +"%Y%m%d")
 	EDICION="libro-${DAY}"
 fi
-PORTADA="${BASEDIR}/extras/portada.fodt"
-PORTOUT=${PORTADA}.body
+PORTADA="${UTILDIR}/extras/portada.fodt"
+PORTOUT=portada.fodt
 
-cat ${PORTADA}.head > ${PORTADA}
+cat ${PORTADA}.head > ${PORTOUT}
 
-	echo -n '         <text:p text:style-name="P1"><text:span text:style-name="T1">' >> ${PORTADA}
-	echo -n ${EDICION}		>> ${PORTADA}
-	echo -n '</text:span></text:p>'	>> ${PORTADA}
-	echo				>> ${PORTADA}
+	echo -n '         <text:p text:style-name="P1"><text:span text:style-name="T1">' >> ${PORTOUT}
+	echo -n ${EDICION}		>> ${PORTOUT}
+	echo -n '</text:span></text:p>'	>> ${PORTOUT}
+	echo				>> ${PORTOUT}
 
-cat ${PORTADA}.tail >> ${PORTADA}
+cat ${PORTADA}.tail >> ${PORTOUT}
 
 UNOCONV=$(which unoconv)
 if [ ! -z "${UNOCONV}" ]; then
-	${UNOCONV} ${PORTADA}
+	${UNOCONV} ${PORTOUT}
 else
 	echo "Required: unoconv"
-	echo "Please convert ${PORTADA} to ${PORTADA%%.fodt}.pdf somehow"
+	echo "Please convert ${PORTOUT} to ${PORTADA%%.fodt}.pdf somehow"
 	exit 1
 fi
