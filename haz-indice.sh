@@ -18,9 +18,10 @@ cat indice.txt |
 		PAGE=${n%%,*}
 		TITLE=${n#*,}
 		# wait, what?
-		ISPDF=${n#*pdf}
+		ISPDF=$(echo $n | cut -d, -f2 | egrep -o '.pdf$')
 
-		if [ -z "${ISPDF}" ]; then
+		if [ "${ISPDF}" ]; then
+			TITLE=$(echo $n | cut -d, -f3)
 			echo -n '         <text:p text:style-name="ParrSeccion">'	>> ${INDOUT}
 			echo -n ${TITLE}	>> ${INDOUT}
 			echo -n '<text:tab/>'	>> ${INDOUT}
