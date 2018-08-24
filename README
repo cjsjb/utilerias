@@ -1,3 +1,6 @@
+Requiere:
+  ghostscript lilypond php-xml
+
 Ver "Installing Repo" en http://source.android.com/source/downloading.html
 para instalar repo. En esencia:
   curl https://dl-ssl.google.com/dl/googlesource/git-repo/repo > ~/bin/repo
@@ -9,19 +12,18 @@ Luego:
   repo init -u git://gitorious.org/cjsjb-partituras/manifiesto.git
   repo sync
 
+  # Generar definición del libro:
+  ./utilerias/manifest2libro.php > libro.def
   # Generar el contenido:
-  ./haz-contenido.sh
+  ./utilerias/haz-contenido.sh
   # Generar la portada:
-  ./haz-portada.sh
+  ./utilerias/haz-portada.sh
   # Generar el índice:
-  ./haz-indice.sh
+  ./utilerias/haz-indice.sh
 
-Aquí hay que editar el índice [extras/indice.fodt] para que muestre los
-títulos correctos.
-
-  yes quit | gs -sDEVICE=pdfwrite -sOutputFile=cjsjb-partituras.pdf \
-      extras/portada.pdf \
-      extras/hoja-blanca.pdf \
-      extras/indice.pdf \
-      extras/hoja-blanca.pdf \
+  gs -q -sDEVICE=pdfwrite -dBATCH -dNOPAUSE -sOutputFile=cjsjb-partituras.pdf \
+      portada.pdf \
+      utilerias/paginas/hoja-blanca.pdf \
+      indice.pdf \
+      utilerias/paginas/hoja-blanca.pdf \
       contenido.pdf
