@@ -63,8 +63,11 @@ foreach ($projects as $index => $project)
 
 foreach ($projects as $index => $project)
 {
-    $currcat = $project['@attributes']['category'];
-    $currtitle = $project['@attributes']['title'];
+    if (array_key_exists('category', $project['@attributes']))
+        $currcat = $project['@attributes']['category'];
+    else
+        continue;
+    $currtitle = @$project['@attributes']['title'];
     $currpath = $project['@attributes']['path'];
     $currpath = str_replace($localpath, "", $currpath); //quitar pathlocal
     if (array_key_exists('score', $project['@attributes']))
