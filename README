@@ -9,8 +9,8 @@ para instalar repo. En esencia:
 Luego:
   mkdir cjsjb-partituras
   cd cjsjb-partituras
-  repo init -u git://gitorious.org/cjsjb-partituras/manifiesto.git
-  repo sync
+  repo init -u https://github.com/cjsjb/partituras-manifiesto.git
+  repo sync --no-clone-bundle
 
   # Generar definición del libro:
   ./utilerias/manifest2libro.php > libro.def
