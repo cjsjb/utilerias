@@ -46,11 +46,11 @@ EOF
 cat ${UTILDIR}/extras/${INDICE}.head ${INDOUT} ${UTILDIR}/extras/${INDICE}.tail > ${INDICE}
 rm ${INDOUT}
 
-UNOCONV=$(which unoconv)
-if [ ! -z "${UNOCONV}" ]; then
-	${UNOCONV} ${INDICE}
+LOBIN=$(which libreoffice)
+if [ ! -z "${LOBIN}" ]; then
+	libreoffice --convert-to pdf:writer_pdf_Export --outdir $(pwd)/ ${INDICE}
 else
-	echo "Required: unoconv"
+	echo "Required: libreoffice"
 	echo "Please convert ${INDICE} to ${INDICE%%.fodt}.pdf somehow"
 	exit 1
 fi

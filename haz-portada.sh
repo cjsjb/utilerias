@@ -18,11 +18,11 @@ cat ${PORTADA}.head > ${PORTOUT}
 
 cat ${PORTADA}.tail >> ${PORTOUT}
 
-UNOCONV=$(which unoconv)
-if [ ! -z "${UNOCONV}" ]; then
-	${UNOCONV} ${PORTOUT}
+LOBIN=$(which libreoffice)
+if [ ! -z "${LOBIN}" ]; then
+	libreoffice --convert-to pdf:writer_pdf_Export --outdir $(pwd)/ ${PORTOUT}
 else
-	echo "Required: unoconv"
+	echo "Required: libreoffice"
 	echo "Please convert ${PORTOUT} to ${PORTADA%%.fodt}.pdf somehow"
 	exit 1
 fi
